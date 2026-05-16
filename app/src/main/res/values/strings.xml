@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Weather App</string>
+    <string name="city_name">Bengaluru</string>
+    <string name="current_temp">19°</string>
+    <string name="weather_condition">Mostly Clear</string>
+    <string name="temp_range">H:24°  L:18°</string>
+    <string name="hourly_forecast">Hourly Forecast</string>
+    <string name="weekly_forecast">Weekly Forecast</string>
+</resources>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient"
+    tools:context=".MainActivity">
+
+    <!-- Top Weather Info -->
+    <LinearLayout
+        android:id="@+id/weatherHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/cityName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bengaluru"
+            android:textColor="@color/white"
+            android:textSize="34sp" />
+
+        <TextView
+            android:id="@+id/currentTemp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="19°"
+            android:textColor="@color/white"
+            android:textSize="96sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/weatherCondition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mostly Clear"
+            android:textColor="@color/text_secondary"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tempRange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="H:24°  L:18°"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <!-- House Illustration Placeholder -->
+    <ImageView
+        android:id="@+id/houseIllustration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:scaleType="centerInside"
+        android:src="@android:drawable/ic_menu_report_image"
+        app:layout_constraintTop_toBottomOf="@id/weatherHeader" />
+
+    <!-- Bottom Forecast Card -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/forecastCard"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        app:cardBackgroundColor="@color/card_bg_semi"
+        app:cardCornerRadius="40dp"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="-40dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Hourly Forecast"
+                    android:textColor="@color/text_secondary"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Weekly Forecast"
+                    android:textColor="@color/text_secondary"
+                    android:alpha="0.6"/>
+            </LinearLayout>
+
+            <!-- Hourly List Placeholder -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/hourlyRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@android:layout/simple_list_item_1" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Navigation Bar -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/bottom_nav_bg"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- Simplified Nav Icons -->
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginStart="40dp"
+            android:src="@android:drawable/ic_menu_mylocation"
+            app:tint="@color/white" />
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circle_bg"
+            android:src="@android:drawable/ic_input_add"
+            app:tint="@color/black"
+            android:padding="15dp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="40dp"
+            android:src="@android:drawable/ic_menu_sort_by_size"
+            app:tint="@color/white" />
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

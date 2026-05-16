@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="bg_start">#3B2667</color>
+    <color name="bg_end">#BC78EC</color>
+
+    <color name="card_bg">#48319D</color>
+    <color name="card_bg_semi">#8048319D</color>
+
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#EBEBF5</color>
+    <color name="text_tertiary">#3C3C43</color>
+
+    <color name="bottom_nav_bg">#2E335A</color>
+</resources>
