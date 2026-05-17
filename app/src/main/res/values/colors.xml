@@ -3,15 +3,18 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="bg_start">#3B2667</color>
-    <color name="bg_end">#BC78EC</color>
+    <!-- Основные цвета из Figma -->
+    <color name="bg_dark_purple">#2E335A</color>
+    <color name="bg_light_purple">#48319D</color>
+    <color name="accent_purple">#C427FB</color>
 
-    <color name="card_bg">#48319D</color>
-    <color name="card_bg_semi">#8048319D</color>
-
+    <!-- Текстовые цвета с прозрачностью (Vibrancy в iOS стиле) -->
     <color name="text_primary">#FFFFFF</color>
-    <color name="text_secondary">#EBEBF5</color>
-    <color name="text_tertiary">#3C3C43</color>
+    <color name="text_secondary">#99EBEBF5</color> <!-- 60% White -->
+    <color name="text_tertiary">#4DEBEBF5</color>  <!-- 30% White -->
 
-    <color name="bottom_nav_bg">#2E335A</color>
+    <!-- Карточки и панели -->
+    <color name="card_bg_purple">#3D3A6A</color>
+    <color name="nav_bar_bg">#3B3F65</color>
+    <color name="tab_bar_border">#40FFFFFF</color>
 </resources>

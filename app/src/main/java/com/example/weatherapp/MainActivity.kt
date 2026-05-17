@@ -6,44 +6,57 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+import android.content.Intent
+import android.widget.ImageView
+import coil.load
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
 class MainActivity : AppCompatActivity() {
-    private val API_KEY = "dc29eb2a4e250e8142f207a948997940" // TODO: Add your API key
+    private val API_KEY = "17f37714a0cb48d98bf72253261605"
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
         
-        // ... previous view compat code ...
+        // Navigation to List Screen
+        findViewById<ImageView>(R.id.btnList).setOnClickListener {
+            startActivity(Intent(this, WeatherListActivity::class.java))
+        }
+        
+        // Update date to current
+        val sdf = SimpleDateFormat("MMMM, dd", Locale.ENGLISH)
+        findViewById<TextView>(R.id.currentDate).text = sdf.format(Date())
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
             insets
         }
 
-        setupHourlyForecast()
+        setupRecyclerView()
         fetchWeatherData("Bengaluru")
-        fetchForecastData("Bengaluru")
     }
 
     private fun fetchWeatherData(city: String) {
+        // ... (код Retrofit без изменений)
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.openweathermap.org/data/2.5/")
+            .baseUrl("https://api.weatherapi.com/v1/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         val service = retrofit.create(WeatherApiService::class.java)
-        service.getCurrentWeather(city, API_KEY).enqueue(object : Callback<WeatherResponse> {
+        service.getFullWeather(API_KEY, city).enqueue(object : Callback<WeatherResponse> {
             override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
                 if (response.isSuccessful) {
                     response.body()?.let { updateUI(it) }
@@ -56,47 +69,33 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun fetchForecastData(city: String) {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.openweathermap.org/data/2.5/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val service = retrofit.create(WeatherApiService::class.java)
-        service.getForecast(city, API_KEY).enqueue(object : Callback<ForecastResponse> {
-            override fun onResponse(call: Call<ForecastResponse>, response: Response<ForecastResponse>) {
-                if (response.isSuccessful) {
-                    response.body()?.let { updateForecastUI(it) }
-                }
-            }
-
-            override fun onFailure(call: Call<ForecastResponse>, t: Throwable) {
-                // Handle error
-            }
-        })
-    }
-
     private fun updateUI(weather: WeatherResponse) {
-        findViewById<TextView>(R.id.cityName).text = weather.name
-        findViewById<TextView>(R.id.currentTemp).text = "${weather.main.temp.toInt()}°"
-        findViewById<TextView>(R.id.weatherCondition).text = weather.weather[0].main
-        findViewById<TextView>(R.id.tempRange).text = "H:${weather.main.tempMax.toInt()}°  L:${weather.main.tempMin.toInt()}°"
-    }
+        // Update main info
+        findViewById<TextView>(R.id.currentTemp).text = "${weather.current.tempC.toInt()}°"
+        
+        // Load main large icon
+        val mainIconUrl = "https:${weather.current.condition.icon.replace("64x64", "128x128")}"
+        findViewById<ImageView>(R.id.mainWeatherIcon).load(mainIconUrl)
+        
+        val maxTemp = weather.forecast.forecastDay[0].day.maxTempC.toInt()
+        val minTemp = weather.forecast.forecastDay[0].day.minTempC.toInt()
+        findViewById<TextView>(R.id.tempRange).text = "Max: $maxTemp°  Min: $minTemp°"
 
-    private fun updateForecastUI(forecast: ForecastResponse) {
-        val recyclerView = findViewById<RecyclerView>(R.id.hourlyRecyclerView)
-        val hourlyData = forecast.list.take(8).map { item ->
-            val time = item.dtTxt.split(" ")[1].substring(0, 5) // Simple extract HH:mm
+        // Update Hourly Forecast
+        val hourlyData = weather.forecast.forecastDay[0].hour.map { hour ->
+            val timeOnly = hour.time.split(" ")[1] // Gets "HH:mm" from "yyyy-MM-dd HH:mm"
             HourlyForecast(
-                time = time,
-                temp = "${item.main.temp.toInt()}°",
-                iconRes = android.R.drawable.ic_menu_day // Still placeholder
+                time = timeOnly,
+                temp = "${hour.tempC.toInt()}°",
+                iconUrl = hour.condition.icon,
+                rainChance = "${hour.chanceOfRain}%"
             )
-        }
-        recyclerView.adapter = ForecastAdapter(hourlyData)
+        }.take(24) // Show next 24 hours
+
+        findViewById<RecyclerView>(R.id.hourlyRecyclerView).adapter = ForecastAdapter(hourlyData)
     }
 
-    private fun setupHourlyForecast() {
+    private fun setupRecyclerView() {
         val recyclerView = findViewById<RecyclerView>(R.id.hourlyRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
     }
