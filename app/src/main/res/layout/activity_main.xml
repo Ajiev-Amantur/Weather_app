@@ -20,6 +20,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/mainWeatherIcon"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/weather_sun"
+            android:layout_marginBottom="10dp"/>
+
         <TextView
             android:id="@+id/cityName"
             android:layout_width="wrap_content"
@@ -123,6 +130,7 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:fillViewport="true"
             app:layout_constraintBottom_toTopOf="@id/bottomNav"
             app:layout_constraintTop_toBottomOf="@id/divider">
 
@@ -140,6 +148,7 @@
                     android:clipToPadding="false"
                     android:orientation="horizontal"
                     android:paddingHorizontal="20dp"
+                    android:nestedScrollingEnabled="false"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/item_hourly" />
 
@@ -171,7 +180,10 @@
                                 android:text="AIR QUALITY"
                                 android:textColor="@color/text_secondary"
                                 android:textSize="12sp"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                android:drawableStart="@android:drawable/ic_menu_info_details"
+                                android:drawablePadding="8dp"
+                                android:drawableTint="@color/text_secondary"/>
                             <TextView
                                 android:id="@+id/tvAirQuality"
                                 android:layout_width="wrap_content"
@@ -211,7 +223,10 @@
                                 android:text="UV INDEX"
                                 android:textColor="@color/text_secondary"
                                 android:textSize="12sp"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                android:drawableStart="@android:drawable/ic_menu_day"
+                                android:drawablePadding="8dp"
+                                android:drawableTint="@color/text_secondary"/>
                             <TextView
                                 android:id="@+id/tvUVIndex"
                                 android:layout_width="wrap_content"
@@ -226,7 +241,7 @@
                     <!-- SUNRISE -->
                     <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
-                        android:layout_height="150dp"
+                        android:layout_height="160dp"
                         android:layout_columnWeight="1"
                         android:layout_margin="8dp"
                         app:cardBackgroundColor="#20FFFFFF"
@@ -243,9 +258,11 @@
                                 android:text="SUNRISE"
                                 android:textColor="@color/text_secondary"
                                 android:textSize="12sp"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                android:drawableStart="@android:drawable/ic_lock_idle_alarm"
+                                android:drawablePadding="8dp"
+                                android:drawableTint="@color/text_secondary"/>
 
-                            <!-- SUNRISE GRAPH ARC -->
                             <ImageView
                                 android:layout_width="match_parent"
                                 android:layout_height="60dp"
@@ -258,8 +275,116 @@
                                 android:layout_height="wrap_content"
                                 android:text="5:28 AM"
                                 android:textColor="@color/white"
-                                android:textSize="20sp"
+                                android:textSize="18sp"
                                 android:layout_gravity="center_horizontal" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- HUMIDITY -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="160dp"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="8dp"
+                        app:cardBackgroundColor="#20FFFFFF"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="HUMIDITY"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:drawableStart="@android:drawable/ic_menu_compass"
+                                android:drawablePadding="8dp"
+                                android:drawableTint="@color/text_secondary"/>
+                            <TextView
+                                android:id="@+id/tvHumidity"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="40%"
+                                android:textColor="@color/white"
+                                android:textSize="30sp"
+                                android:layout_marginTop="12dp"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="The dew point is 17°"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="11sp"
+                                android:layout_marginTop="12dp"/>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+                    <!-- WIND -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="160dp"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="8dp"
+                        app:cardBackgroundColor="#20FFFFFF"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="WIND"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                android:drawableStart="@android:drawable/ic_menu_directions"
+                                android:drawablePadding="8dp"
+                                android:drawableTint="@color/text_secondary"/>
+                            <TextView
+                                android:id="@+id/tvWind"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="9.7 km/h"
+                                android:textColor="@color/white"
+                                android:textSize="24sp"
+                                android:layout_marginTop="16dp"/>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- RAINFALL -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="160dp"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="8dp"
+                        app:cardBackgroundColor="#20FFFFFF"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="RAINFALL"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/tvRainfall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="1.8 mm"
+                                android:textColor="@color/white"
+                                android:textSize="24sp"
+                                android:layout_marginTop="8dp"/>
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
                 </GridLayout>

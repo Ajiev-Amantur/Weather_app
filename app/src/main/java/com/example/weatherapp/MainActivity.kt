@@ -1,102 +1,139 @@
 package com.example.weatherapp
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.widget.TextView
+i   mport android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.weatherapp.databinding.ActivityMainBinding
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
-import android.content.Intent
-import android.widget.ImageView
-import coil.load
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
-    private val API_KEY = "17f37714a0cb48d98bf72253261605"
-    
+    private val apiKey = "17f37714a0cb48d98bf72253261605"
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
-        
-        // Navigation to List Screen
-        findViewById<ImageView>(R.id.btnList).setOnClickListener {
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        binding.btnList.setOnClickListener {
             startActivity(Intent(this, WeatherListActivity::class.java))
         }
-        
-        // Update date to current
-        val sdf = SimpleDateFormat("MMMM, dd", Locale.ENGLISH)
-        findViewById<TextView>(R.id.currentDate).text = sdf.format(Date())
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        binding.houseIllustration.setOnClickListener { getLocationWeather() }
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
             insets
         }
 
         setupRecyclerView()
-        fetchWeatherData("Bengaluru")
+        if (checkLocationPermissions()) getLocationWeather() else fetchWeatherData("Bengaluru")
+    }
+
+    private fun checkLocationPermissions() = ActivityCompat.checkSelfPermission(
+        this, Manifest.permission.ACCESS_FINE_LOCATION
+    ) == PackageManager.PERMISSION_GRANTED
+
+    private fun getLocationWeather() {
+        if (!checkLocationPermissions()) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1002)
+            return
+        }
+        try {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                if (location != null) {
+                    fetchWeatherData("${location.latitude},${location.longitude}")
+                } else {
+                    fetchWeatherData("Bengaluru")
+                }
+            }
+        } catch (e: SecurityException) {
+            fetchWeatherData("Bengaluru")
+        }
     }
 
     private fun fetchWeatherData(city: String) {
-        // ... (код Retrofit без изменений)
         val retrofit = Retrofit.Builder()
             .baseUrl("https://api.weatherapi.com/v1/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         val service = retrofit.create(WeatherApiService::class.java)
-        service.getFullWeather(API_KEY, city).enqueue(object : Callback<WeatherResponse> {
+        service.getFullWeather(apiKey, city).enqueue(object : Callback<WeatherResponse> {
             override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
-                if (response.isSuccessful) {
-                    response.body()?.let { updateUI(it) }
-                }
+                if (response.isSuccessful) response.body()?.let { updateUI(it) }
             }
-
             override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
-                // Handle error
+                Toast.makeText(this@MainActivity, "Network error", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
     private fun updateUI(weather: WeatherResponse) {
-        // Update main info
-        findViewById<TextView>(R.id.currentTemp).text = "${weather.current.tempC.toInt()}°"
-        
-        // Load main large icon
-        val mainIconUrl = "https:${weather.current.condition.icon.replace("64x64", "128x128")}"
-        findViewById<ImageView>(R.id.mainWeatherIcon).load(mainIconUrl)
-        
-        val maxTemp = weather.forecast.forecastDay[0].day.maxTempC.toInt()
-        val minTemp = weather.forecast.forecastDay[0].day.minTempC.toInt()
-        findViewById<TextView>(R.id.tempRange).text = "Max: $maxTemp°  Min: $minTemp°"
+        binding.apply {
+            cityName.text = weather.location.name
+            currentTemp.text = getString(R.string.temp_format, weather.current.tempC.toInt())
+            weatherCondition.text = weather.current.condition.text
+            
+            val maxTemp = weather.forecast.forecastDay[0].day.maxTempC.toInt()
+            val minTemp = weather.forecast.forecastDay[0].day.minTempC.toInt()
+            tempRange.text = getString(R.string.temp_range_format, maxTemp, minTemp)
 
-        // Update Hourly Forecast
-        val hourlyData = weather.forecast.forecastDay[0].hour.map { hour ->
-            val timeOnly = hour.time.split(" ")[1] // Gets "HH:mm" from "yyyy-MM-dd HH:mm"
-            HourlyForecast(
-                time = timeOnly,
-                temp = "${hour.tempC.toInt()}°",
-                iconUrl = hour.condition.icon,
-                rainChance = "${hour.chanceOfRain}%"
-            )
-        }.take(24) // Show next 24 hours
+            mainWeatherIcon.setImageResource(WeatherUtils.getWeatherIcon(weather.current.condition.code))
 
-        findViewById<RecyclerView>(R.id.hourlyRecyclerView).adapter = ForecastAdapter(hourlyData)
+            val hourlyData = weather.forecast.forecastDay[0].hour.map { hour ->
+                HourlyForecast(
+                    time = hour.time.split(" ")[1],
+                    temp = "${hour.tempC.toInt()}°",
+                    iconRes = WeatherUtils.getWeatherIcon(hour.condition.code),
+                    rainChance = if (hour.chanceOfRain > 0) "${hour.chanceOfRain}%" else ""
+                )
+            }.take(24)
+
+            hourlyRecyclerView.adapter = ForecastAdapter(hourlyData)
+            
+            tvUVIndex.text = weather.current.uv.toInt().toString()
+            tvSunrise.text = weather.forecast.forecastDay[0].astro.sunrise
+            tvHumidity.text = "${weather.current.humidity}%"
+            tvWind.text = "${weather.current.windKph} km/h"
+            tvRainfall.text = "${weather.current.precipMm} mm"
+            
+            weather.current.airQuality?.let {
+                tvAirQuality.text = when(it.epaIndex) {
+                    1 -> "1-Excellent"
+                    2 -> "2-Good"
+                    3 -> "3-Moderate"
+                    else -> "Low Risk"
+                }
+            }
+        }
     }
 
     private fun setupRecyclerView() {
-        val recyclerView = findViewById<RecyclerView>(R.id.hourlyRecyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.hourlyRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1002 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) getLocationWeather()
     }
 }

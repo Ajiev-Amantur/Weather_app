@@ -6,4 +6,6 @@
     <string name="temp_range">H:24°  L:18°</string>
     <string name="hourly_forecast">Hourly Forecast</string>
     <string name="weekly_forecast">Weekly Forecast</string>
+    <string name="temp_format">%d°</string>
+    <string name="temp_range_format">H:%1$d°  L:%2$d°</string>
 </resources>
