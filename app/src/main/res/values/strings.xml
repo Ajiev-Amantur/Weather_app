@@ -1,11 +1,23 @@
 <resources>
-    <string name="app_name">Weather App</string>
-    <string name="city_name">Bengaluru</string>
-    <string name="current_temp">19°</string>
-    <string name="weather_condition">Mostly Clear</string>
-    <string name="temp_range">H:24°  L:18°</string>
-    <string name="hourly_forecast">Hourly Forecast</string>
-    <string name="weekly_forecast">Weekly Forecast</string>
-    <string name="temp_format">%d°</string>
-    <string name="temp_range_format">H:%1$d°  L:%2$d°</string>
+    <string name="app_name">Погода</string>
+    <string name="temp_format">%1$d°</string>
+    <string name="temp_range_format">М:%1$d°  Н:%2$d°</string>
+    <string name="visibility_label">ВИДИМОСТЬ</string>
+    <string name="visibility_format">%1$d км</string>
+    <string name="humidity_label">ВЛАЖНОСТЬ</string>
+    <string name="humidity_format">%1$d%%</string>
+    <string name="wind_label">ВЕТЕР</string>
+    <string name="wind_format">%1$.1f км/ч</string>
+    <string name="pressure_label">ДАВЛЕНИЕ</string>
+    <string name="pressure_format">%1$d гПа</string>
+    <string name="uv_index_label">УФ-ИНДЕКС</string>
+    <string name="sunrise_label">ВОСХОД</string>
+    <string name="rainfall_label">ОСАДКИ</string>
+    <string name="rainfall_format">%1$.1f мм</string>
+    <string name="air_quality_label">КАЧЕСТВО ВОЗДУХА</string>
+    <string name="hourly_forecast">Почасовой прогноз</string>
+    <string name="weekly_forecast">Прогноз на неделю</string>
+    <string name="search_hint">Поиск города или страны</string>
+    <string name="last_hour">за последний час</string>
+    <string name="low_health_risk">3-Низкий риск</string>
 </resources>

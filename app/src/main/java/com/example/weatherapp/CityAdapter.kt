@@ -22,6 +22,8 @@ class CityAdapter(
             tvCityTemp.text = city.temp
             tvCityName.text = city.city
             tvCityCondition.text = city.condition
+            tvCityRange.text = city.range
+            ivCityWeatherIcon.setImageResource(city.iconRes)
             root.setOnClickListener { onCitySelected(city.city) }
         }
     }

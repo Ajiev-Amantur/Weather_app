@@ -2,19 +2,17 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="white_70">#B3FFFFFF</color>
+    <color name="white_50">#80FFFFFF</color>
+    <color name="glass_bg">#30FFFFFF</color>
+    <color name="bg_dark_purple">#1C1B33</color>
+    <color name="nav_bar_bg">#2E335A</color>
+    <color name="card_bg_purple">#48319D</color>
+    <color name="text_secondary">#EBEBF5</color>
 
-    <!-- Основные цвета из Figma -->
-    <color name="bg_dark_purple">#2E335A</color>
-    <color name="bg_light_purple">#48319D</color>
-    <color name="accent_purple">#C427FB</color>
-
-    <!-- Текстовые цвета с прозрачностью (Vibrancy в iOS стиле) -->
-    <color name="text_primary">#FFFFFF</color>
-    <color name="text_secondary">#99EBEBF5</color> <!-- 60% White -->
-    <color name="text_tertiary">#4DEBEBF5</color>  <!-- 30% White -->
-
-    <!-- Карточки и панели -->
-    <color name="card_bg_purple">#3D3A6A</color>
-    <color name="nav_bar_bg">#3B3F65</color>
-    <color name="tab_bar_border">#40FFFFFF</color>
+    <!-- Premium UI Colors -->
+    <color name="primary_purple">#48319D</color>
+    <color name="secondary_purple">#1F1D47</color>
+    <color name="accent_blue">#40CBD8</color>
+    <color name="glow_purple">#C427FB</color>
 </resources>

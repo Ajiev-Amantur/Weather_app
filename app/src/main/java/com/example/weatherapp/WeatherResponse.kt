@@ -2,61 +2,43 @@ package com.example.weatherapp
 
 import com.google.gson.annotations.SerializedName
 
+// Current Weather Response
 data class WeatherResponse(
-    @SerializedName("location") val location: Location,
-    @SerializedName("current") val current: Current,
-    @SerializedName("forecast") val forecast: Forecast
+    @SerializedName("coord") val coord: Coord,
+    @SerializedName("weather") val weather: List<Weather>,
+    @SerializedName("main") val main: Main,
+    @SerializedName("wind") val wind: Wind,
+    @SerializedName("sys") val sys: Sys,
+    @SerializedName("name") val name: String,
+    @SerializedName("visibility") val visibility: Int
 )
 
-data class Location(
-    @SerializedName("name") val name: String
+data class Coord(val lat: Double, val lon: Double)
+data class Weather(val id: Int, val main: String, val description: String, val icon: String)
+data class Main(
+    val temp: Double,
+    @SerializedName("feels_like") val feelsLike: Double,
+    @SerializedName("temp_min") val tempMin: Double,
+    @SerializedName("temp_max") val tempMax: Double,
+    val pressure: Int,
+    val humidity: Int
+)
+data class Wind(val speed: Double, val deg: Int)
+data class Sys(val country: String, val sunrise: Long, val sunset: Long)
+
+// Forecast Response (5 Day / 3 Hour)
+data class ForecastResponse(
+    @SerializedName("list") val list: List<ForecastItem>,
+    @SerializedName("city") val city: City
 )
 
-data class Current(
-    @SerializedName("temp_c") val tempC: Double,
-    @SerializedName("condition") val condition: Condition,
-    @SerializedName("uv") val uv: Double,
-    @SerializedName("air_quality") val airQuality: AirQuality?,
-    @SerializedName("wind_kph") val windKph: Double,
-    @SerializedName("precip_mm") val precipMm: Double,
-    @SerializedName("humidity") val humidity: Int,
-    @SerializedName("vis_km") val visKm: Double,
-    @SerializedName("pressure_mb") val pressureMb: Double
+data class ForecastItem(
+    val dt: Long,
+    val main: Main,
+    val weather: List<Weather>,
+    val wind: Wind,
+    @SerializedName("dt_txt") val dtTxt: String,
+    @SerializedName("pop") val pop: Double // Probability of precipitation
 )
 
-data class Condition(
-    @SerializedName("text") val text: String,
-    @SerializedName("icon") val icon: String,
-    @SerializedName("code") val code: Int
-)
-
-data class AirQuality(
-    @SerializedName("us-epa-index") val epaIndex: Int
-)
-
-data class Forecast(
-    @SerializedName("forecastday") val forecastDay: List<ForecastDay>
-)
-
-data class ForecastDay(
-    @SerializedName("day") val day: Day,
-    @SerializedName("astro") val astro: Astro,
-    @SerializedName("hour") val hour: List<Hour>
-)
-
-data class Day(
-    @SerializedName("maxtemp_c") val maxTempC: Double,
-    @SerializedName("mintemp_c") val minTempC: Double
-)
-
-data class Astro(
-    @SerializedName("sunrise") val sunrise: String,
-    @SerializedName("sunset") val sunset: String
-)
-
-data class Hour(
-    @SerializedName("time") val time: String,
-    @SerializedName("temp_c") val tempC: Double,
-    @SerializedName("condition") val condition: Condition,
-    @SerializedName("chance_of_rain") val chanceOfRain: Int
-)
+data class City(val name: String, val country: String, val sunrise: Long, val sunset: Long)

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="200dp"
-    android:height="100dp"
-    android:viewportWidth="200"
-    android:viewportHeight="100">
-    <!-- Тень/путь арки -->
+    android:width="100dp"
+    android:height="40dp"
+    android:viewportWidth="100"
+    android:viewportHeight="40">
     <path
-        android:pathData="M10,90 Q100,0 190,90"
+        android:pathData="M10,35 Q50,5 90,35"
+        android:strokeWidth="2"
+        android:strokeColor="#80FFFFFF"
+        android:strokeLineCap="round"/>
+    <path
+        android:pathData="M10,35 Q30,15 40,15"
         android:strokeWidth="3"
-        android:strokeColor="#40FFFFFF"
-        android:strokeLineCap="round" />
-    <!-- Солнце на арке (примерно посередине) -->
-    <path
-        android:fillColor="#FFD36E"
-        android:pathData="M100,25m-5,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0" />
+        android:strokeColor="@color/glow_purple"
+        android:strokeLineCap="round"/>
 </vector>
